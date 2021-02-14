@@ -1,10 +1,15 @@
 import React, { useCallback } from 'react';
 import { Card } from 'react-native-paper';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components/native';
 import { MovieType } from '../core/types';
 import { getCroppedImageUrl } from '../core/utils';
 import { genreSelector } from '../store/movie.ts/selector';
 import { RootState } from '../store/reducer';
+
+const SmallCard = styled(Card)`
+  width: 200px;
+`;
 
 export type MovieCardProps = {
   movie: MovieType;
@@ -23,10 +28,9 @@ export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
   }, [movie, onPress]);
 
   return (
-    <Card
+    <SmallCard
       accessibilityComponentType
       accessibilityTraits
-      style={{ width: 200 }}
       onPress={onCardPress}>
       <Card.Cover
         source={{ uri: getCroppedImageUrl(movie.poster_path) }}
@@ -39,6 +43,6 @@ export const MovieCard = ({ movie, onPress }: MovieCardProps) => {
         accessibilityComponentType
         accessibilityTraits
       />
-    </Card>
+    </SmallCard>
   );
 };

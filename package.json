@@ -7,13 +7,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.10",
     "@react-navigation/native": "^5.9.2",
     "@react-navigation/stack": "^5.14.2",
     "@reduxjs/toolkit": "^1.5.0",
+    "@types/lodash": "^4.14.168",
     "@types/react-native-snap-carousel": "^3.8.2",
     "@types/react-native-vector-icons": "^6.4.6",
     "@types/react-native-video": "^5.0.4",
@@ -21,6 +23,8 @@
     "@types/styled-components-react-native": "^5.1.1",
     "add": "^2.0.6",
     "axios": "^0.21.1",
+    "eslint-plugin-unused-imports": "^1.1.0",
+    "lodash": "^4.17.20",
     "react": "16.13.1",
     "react-native": "0.63.4",
     "react-native-config": "^1.4.2",
@@ -50,10 +54,20 @@
     "@types/styled-components": "^5.1.7",
     "babel-jest": "^25.1.0",
     "eslint": "^6.5.1",
+    "husky": "^5.0.9",
     "jest": "^25.1.0",
     "metro-react-native-babel-preset": "^0.59.0",
     "react-test-renderer": "16.13.1",
     "typescript": "^3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*": "prettier --write"
+
   },
   "jest": {
     "preset": "react-native",

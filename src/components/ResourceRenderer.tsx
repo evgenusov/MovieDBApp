@@ -1,22 +1,25 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { FabriceSliceState, FabriceSliceStatusEnum } from '../core/slices';
+import { Loader } from './Loader';
 
 type ResourceRendererType = {
   resource: FabriceSliceState<any>;
-  renderInit?: () => void;
-  children: any;
+  renderInit?: () => React.ReactElement;
+  children: (state: any) => React.ReactElement;
   renderLastState?: boolean;
-  renderLoading?: (lastState: any) => void;
-  renderFailed?: (lastState: any) => void;
+  renderLoading?: (lastState: any) => React.ReactElement;
+  renderFailed?: (lastState: any) => React.ReactElement;
 };
-export const ResourceRenderer = (props: ResourceRendererType) => {
+export const ResourceRenderer = (
+  props: ResourceRendererType,
+): React.ReactElement => {
   const {
     resource,
     children,
     renderInit = () => <View />,
     renderLoading = () => {
-      return <View />;
+      return <Loader />;
     },
     renderFailed = (reason: any) => {
       if (reason.error && reason.error.message) {
@@ -32,7 +35,7 @@ export const ResourceRenderer = (props: ResourceRendererType) => {
 
   switch (resource.status) {
     case FabriceSliceStatusEnum.INIT:
-      return renderInit;
+      return renderInit();
     case FabriceSliceStatusEnum.SUCCESS:
       return children(resource.data);
     case FabriceSliceStatusEnum.LOADING:
@@ -40,6 +43,6 @@ export const ResourceRenderer = (props: ResourceRendererType) => {
     case FabriceSliceStatusEnum.FAILURE:
       return renderFailed(resource.error);
     default:
-      return renderInit;
+      return renderInit();
   }
 };

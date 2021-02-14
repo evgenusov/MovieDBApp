@@ -1,11 +1,15 @@
-import { Item } from 'react-native-paper/lib/typescript/components/List/List';
-import { takeLatest, all, call, put } from 'redux-saga/effects';
+import { takeLatest, call, put } from 'redux-saga/effects';
 import { MovieType, TVShowType } from '../../core/types';
+import { DiscoverAPI } from '../../services/api/discover';
 import { MoviesAPI } from '../../services/api/movies';
+import { TvShowAPI } from '../../services/api/tv';
 import { ApiPagedResponse } from '../../services/api/types';
 import { homeScreenActions } from './reducer';
 import { HomeScreenSection, HomeScreenCarouselTypeEnum } from './types';
 
+/**
+ * Saga for fetching data for home screen's sections
+ */
 function* fetchHomeSaga() {
   try {
     yield put(homeScreenActions.start());
@@ -16,16 +20,16 @@ function* fetchHomeSaga() {
       MoviesAPI.fetchPopularMovies,
     );
     const popularSeriesResponse: ApiPagedResponse<TVShowType> = yield call(
-      MoviesAPI.fetchPopularSeries,
+      TvShowAPI.fetchPopularSeries,
     );
     const documenaryMovieResponse: ApiPagedResponse<MovieType> = yield call(
-      MoviesAPI.discoverMovies,
+      DiscoverAPI.discoverMovies,
       {
         with_genres: documentaryGenreId,
       },
     );
     const familyMovieResponse: ApiPagedResponse<MovieType> = yield call(
-      MoviesAPI.discoverMovies,
+      DiscoverAPI.discoverMovies,
       {
         with_genres: familyGenreId,
       },
@@ -64,6 +68,9 @@ function* fetchHomeSaga() {
   }
 }
 
+/**
+ * Sagas for home screen
+ */
 export function* HomeScreenSagas() {
   yield takeLatest(homeScreenActions.run, fetchHomeSaga);
 }

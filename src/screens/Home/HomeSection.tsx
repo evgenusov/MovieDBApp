@@ -1,14 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { ListRenderItemInfo } from 'react-native';
-import { Title, Subheading } from 'react-native-paper';
-import Carousel from 'react-native-snap-carousel';
-import { Container } from '../../components/Helpers';
-import { MovieCard } from '../../components/MovieCard';
-import { WideMovieCard } from '../../components/WideMovieCard';
-import { SCREEN_WIDTH } from '../../constants';
+import { SCREENS } from '../../core/screens';
 import { MovieType } from '../../core/types';
-import { SCREENS } from '../../Navigator';
 import {
   HomeScreenCarouselTypeEnum,
   HomeScreenSection,

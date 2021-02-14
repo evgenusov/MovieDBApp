@@ -6,3 +6,7 @@ export const genreSelector = (state: RootState, genreIds: number[]) => {
 
   return genres.filter((genre) => genreIds.includes(genre.id));
 };
+
+export const genresSelector = (state: RootState) => {
+  return state.genres;
+};

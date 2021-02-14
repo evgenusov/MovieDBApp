@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { CaseReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export enum FabriceSliceStatusEnum {
   INIT = 'INIT',
@@ -22,6 +22,7 @@ export type FabriceSliceState<T> = {
 export const fabricSlice = <T>(
   name: string,
   initialState: FabriceSliceState<any>,
+  extraReducers?: Record<string, CaseReducer>,
 ) => {
   return createSlice({
     name,
@@ -29,7 +30,7 @@ export const fabricSlice = <T>(
     reducers: {
       init: (state) => {
         state.data = undefined;
-        state.status = FabriceSliceStatusEnum.LOADING;
+        state.status = FabriceSliceStatusEnum.INIT;
 
         return state;
       },
@@ -52,6 +53,7 @@ export const fabricSlice = <T>(
 
         return state;
       },
+      ...extraReducers,
     },
   });
 };

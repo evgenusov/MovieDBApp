@@ -1,6 +1,6 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import FastImage from 'react-native-fast-image';
-import { Paragraph, Subheading, Title, Text } from 'react-native-paper';
+import { Paragraph, Subheading, Title } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Animated, { Extrapolate } from 'react-native-reanimated';
 import { Container } from '../../components/Helpers';
@@ -12,13 +12,13 @@ import {
   MovieTitle,
   PlayButton,
   PlayButtonArea,
+  StyledScrollView,
 } from './MovieDetailScreen.styled';
 import { useNavigation } from '@react-navigation/native';
-import { SCREENS } from '../../Navigator';
-
-const H_MAX_HEIGHT = SCREEN_HEIGHT * 0.65;
-const H_MIN_HEIGHT = 56;
-const H_SCROLL_DISTANCE = H_MAX_HEIGHT - H_MIN_HEIGHT;
+import { COLORS } from '../../core/colors';
+import { Dimensions, StyleSheet } from 'react-native';
+import { getMovieDetailViewPort } from './MovieDetailScreen.utils';
+import { SCREENS } from '../../core/screens';
 
 export const MovieDetailScreen = ({ route }: any) => {
   const {
@@ -26,75 +26,105 @@ export const MovieDetailScreen = ({ route }: any) => {
   }: {
     movie: MovieType;
   } = route.params || {};
-
   const navigation = useNavigation();
   const scrollOffsetY = useRef(new Animated.Value(0)).current;
+  const [viewport, SetViewPort] = useState(
+    getMovieDetailViewPort(SCREEN_HEIGHT, SCREEN_WIDTH),
+  );
+
   const headerScrollHeight = scrollOffsetY.interpolate({
-    inputRange: [0, H_SCROLL_DISTANCE],
-    outputRange: [H_MAX_HEIGHT, H_MIN_HEIGHT],
+    inputRange: [0, viewport.scrollDistance],
+    outputRange: [viewport.maxHeight, viewport.minHeight],
     extrapolate: Extrapolate.CLAMP,
   });
 
   const imageHeight = scrollOffsetY.interpolate({
-    inputRange: [0, H_MAX_HEIGHT],
-    outputRange: [H_MAX_HEIGHT, H_MIN_HEIGHT],
+    inputRange: [0, viewport.maxHeight],
+    outputRange: [viewport.maxHeight, viewport.minHeight],
     extrapolateLeft: Extrapolate.IDENTITY,
     extrapolateRight: Extrapolate.CLAMP,
   });
 
   const onTouchPlay = useCallback(() => {
-      navigation.navigate(SCREENS.PLAYER);
+    navigation.navigate(SCREENS.PLAYER, {
+      movie,
+    });
   }, []);
+
+  const onLayoutChanged = () => {
+    const { height, width } = Dimensions.get('screen');
+    SetViewPort(getMovieDetailViewPort(height, width));
+  };
 
   return (
     <>
       <Animated.View
-        style={{
-          top: 0,
-          left: 0,
-          right: 0,
-          height: headerScrollHeight,
-          position: 'relative',
-          zIndex: 10,
-        }}>
+        onLayout={onLayoutChanged}
+        style={[
+          styles.imageView,
+          {
+            height: headerScrollHeight,
+          },
+        ]}>
         <Animated.Image
           source={{
             uri: getOriginalImageUrl(movie.poster_path),
           }}
-          resizeMode={FastImage.resizeMode.center}
+          resizeMode={
+            !viewport.isWide
+              ? FastImage.resizeMode.cover
+              : FastImage.resizeMode.contain
+          }
           style={{
-            zIndex: 10,
             height: imageHeight,
-            width: SCREEN_WIDTH,
+            width: viewport.screenWidth,
           }}
         />
       </Animated.View>
-      <Animated.ScrollView
+      <Animated.View
+        style={[
+          {
+            top: headerScrollHeight,
+          },
+          styles.playButton,
+        ]}>
+        <PlayButtonArea>
+          <PlayButton onPress={onTouchPlay}>
+            <Icon name={'play'} size={24} color={COLORS.text} />
+          </PlayButton>
+        </PlayButtonArea>
+      </Animated.View>
+      <StyledScrollView
         scrollEventThrottle={16}
         bounces={false}
-        style={{
-          position: 'relative',
-
-          zIndex: 100,
-        }}
-        stickyHeaderIndices={[0]}
         onScroll={Animated.event(
           [{ nativeEvent: { contentOffset: { y: scrollOffsetY } } }],
           { useNativeDriver: true },
         )}>
         <MovieTitle>
           <Title numberOfLines={1}>{movie.title}</Title>
-          <PlayButtonArea>
-            <PlayButton onPress={onTouchPlay}>
-              <Icon name={'play'} size={24} />
-            </PlayButton>
-          </PlayButtonArea>
         </MovieTitle>
         <Container>
           <Subheading>{movie.original_title}</Subheading>
           <Paragraph>{movie.overview}</Paragraph>
         </Container>
-      </Animated.ScrollView>
+      </StyledScrollView>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  playButton: {
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    zIndex: 100,
+  },
+  imageView: {
+    top: 0,
+    left: 0,
+    right: 0,
+    position: 'relative',
+    zIndex: 0,
+  },
+});

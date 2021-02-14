@@ -3,16 +3,20 @@ import { handleApiResponse, http } from '../http';
 import { ApiPagedResponse } from './types';
 
 /**
- * Object for work with movies  API
+ * Object for work with search API
  */
-export const MoviesAPI = {
+export const SearchAPI = {
   /**
-   * Endpoint for getting popular movies
+   * Search movie
+   * @param query search query
    * @returns
    */
-  async fetchPopularMovies(): Promise<ApiPagedResponse<MovieType>> {
+  async search(query: string): Promise<ApiPagedResponse<MovieType>> {
     const response = await http.request({
-      url: 'movie/popular',
+      url: '/search/movie',
+      params: {
+        query,
+      },
     });
     return handleApiResponse(response);
   },

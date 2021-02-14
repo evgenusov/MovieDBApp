@@ -1,4 +1,4 @@
-import { GenreType } from "../../core/types";
+import { GenreType } from '../../core/types';
 
 export type ApiPagedResponse<T> = {
   page: number;
@@ -11,6 +11,6 @@ export type GenreResponse = {
   genres: GenreType[];
 };
 
-export type DiscoerMoviesParams = {
-  with_genres?: string
-}
+export type DiscoverMoviesParams = {
+  with_genres?: string;
+};

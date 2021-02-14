@@ -11,6 +11,5 @@ const initialState: FabriceSliceState<GenreType> = {
 
 export const genresSlice = fabricSlice<GenreType>('genres', initialState);
 
-
 export const genresReducer = genresSlice.reducer;
-export const genresActions = genresSlice.actions
+export const genresActions = genresSlice.actions;
