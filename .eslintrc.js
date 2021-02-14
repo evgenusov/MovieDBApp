@@ -3,6 +3,7 @@ module.exports = {
   extends: '@react-native-community',
   plugins: ["unused-imports"],
   rules: {
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "no-console": 'error'
   },
 };
