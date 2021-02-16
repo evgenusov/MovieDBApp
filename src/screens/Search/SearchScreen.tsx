@@ -7,7 +7,7 @@ import { SizedBox } from '../../components/Helpers';
 import { ResourceRenderer } from '../../components/ResourceRenderer';
 import { SearchResultItem } from '../../components/SearchResult';
 import { GenreType, MovieType } from '../../core/types';
-import { genresSelector } from '../../store/movie.ts/selector';
+import { genresSelector } from '../../store/movie/selector';
 import { searchActions } from '../../store/search/reducer';
 import {
   searchResultLoading,

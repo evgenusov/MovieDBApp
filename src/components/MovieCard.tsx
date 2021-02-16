@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import styled from 'styled-components/native';
 import { MovieType } from '../core/types';
 import { getCroppedImageUrl } from '../core/utils';
-import { genreSelector } from '../store/movie.ts/selector';
+import { genreSelector } from '../store/movie/selector';
 import { RootState } from '../store/reducer';
 
 const SmallCard = styled(Card)`

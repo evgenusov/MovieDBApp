@@ -5,7 +5,7 @@ import { ResourceRenderer } from '../../components/ResourceRenderer';
 import { homeScreenActions } from '../../store/home/reducer';
 import { homeScreensStateSelector } from '../../store/home/selector';
 import { HomeScreenSection } from '../../store/home/types';
-import { genresActions } from '../../store/movie.ts/reducer';
+import { genresActions } from '../../store/movie/reducer';
 import { HomeSectionConstructor } from './HomeSection';
 
 export const HomeScreen = () => {

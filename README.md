@@ -13,6 +13,7 @@
 
 ## How to run ios
 ```
+ $ npx pod-install // or cd ios && pod install
  $ yarn ios
 ```
 
